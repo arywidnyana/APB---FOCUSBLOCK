@@ -13,8 +13,10 @@ import '../../../../data/models/daily_summary_model.dart';
 
 class DailySummaryBar extends StatelessWidget {
   final DailySummaryModel? summary;
+  /// Override label "Progress hari ini" — misal "Semua waktu"
+  final String? labelOverride;
 
-  const DailySummaryBar({super.key, this.summary});
+  const DailySummaryBar({super.key, this.summary, this.labelOverride});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +71,7 @@ class DailySummaryBar extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Progress hari ini', style: AppTypography.caption),
+                    Text(labelOverride ?? 'Progress hari ini', style: AppTypography.caption),
                     Text(
                       '${s?.totalDone ?? 0} / ${s?.totalPlanned ?? 0} blok',
                       style: AppTypography.caption.copyWith(

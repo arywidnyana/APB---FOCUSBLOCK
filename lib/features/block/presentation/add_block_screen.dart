@@ -1,3 +1,4 @@
+import '../../collab/presentation/collab_block_screen.dart';
 // =============================================================
 // FILE: lib/features/block/presentation/add_block_screen.dart
 // TANGGUNG JAWAB: Layar form tambah blok waktu belajar baru.
@@ -183,6 +184,21 @@ class _AddBlockScreenState extends State<AddBlockScreen> {
                           color: AppColors.coral)),
                     ),
 
+                  // Tombol buat bersama teman
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CollabBlockScreen())),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.tealMid),
+                        foregroundColor: AppColors.teal,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                      icon: const Icon(Icons.people_outline, size: 18),
+                      label: const Text('Buat Bersama Teman'),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   // Tombol simpan
                   SizedBox(
                     width: double.infinity,
