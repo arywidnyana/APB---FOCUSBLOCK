@@ -10,6 +10,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../friends/presentation/friends_screen.dart';
+import 'collab_timer_screen.dart';
+import '../../../data/models/block_model.dart';
+import '../../../core/constants/app_constants.dart' show AppConstants;
 
 class CollabBlockScreen extends StatefulWidget {
   const CollabBlockScreen({super.key});
@@ -202,7 +205,7 @@ class _CollabBlockScreenState extends State<CollabBlockScreen> {
                     : const Icon(Icons.send, size: 18),
                 label: Text(_selected.isEmpty
                     ? 'Pilih teman dulu'
-                    : 'Kirim request ke ${_selected.length} teman'),
+                    : 'Mulai sesi bersama (${_selected.length} teman)'),
               ),
             ),
             const SizedBox(height: 20),
@@ -346,18 +349,42 @@ class _CollabBlockScreenState extends State<CollabBlockScreen> {
   }
 
   Future<void> _sendRequest() async {
-    setState(() => _sending = true);
-    await Future.delayed(const Duration(milliseconds: 800));
-    if (mounted) {
-      setState(() => _sending = false);
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          'Request dikirim ke ${_selected.map((f) => f.name.split(' ').first).join(', ')}!'),
-        backgroundColor: AppColors.teal.withOpacity(0.9),
+    if (_sessionName.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Isi nama sesi dulu ya!'),
+        backgroundColor: AppColors.coral,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ));
+      return;
+    }
+
+    setState(() => _sending = true);
+    await Future.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
+    setState(() => _sending = false);
+
+    // Buat BlockModel dummy dari input form
+    final block = BlockModel(
+      subject:         _subject,
+      sessionName:     _sessionName.trim().isEmpty ? 'Sesi Bersama' : _sessionName.trim(),
+      startTime:       '${_startTime.hour.toString().padLeft(2,'0')}:${_startTime.minute.toString().padLeft(2,'0')}',
+      plannedDuration: _duration,
+      status:          AppConstants.statusOngoing,
+      date:            DateTime.now().toIso8601String().substring(0, 10),
+      createdAt:       DateTime.now().toIso8601String(),
+    );
+
+    // Navigasi ke CollabTimerScreen — layar timer sesi bersama
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => CollabTimerScreen(
+            block:   block,
+            friends: List.from(_selected),
+          ),
+        ),
+      );
     }
   }
 }
