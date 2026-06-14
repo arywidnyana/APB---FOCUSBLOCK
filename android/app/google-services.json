@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "172775608092",
+    "project_id": "focusblock-d7179",
+    "storage_bucket": "focusblock-d7179.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172775608092:android:f4d206efe04e7bbf3bb4d9",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBd3uNOQEmIM8TYJz-Z41Q3RojB5Z7vfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

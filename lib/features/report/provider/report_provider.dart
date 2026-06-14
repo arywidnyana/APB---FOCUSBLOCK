@@ -42,7 +42,7 @@ class ReportProvider extends ChangeNotifier {
 
     _missedBlocks = [
       BlockModel(
-        id: 3, subject: 'Bahasa Inggris',
+        id: '3', subject: 'Bahasa Inggris',
         sessionName:     'Reading comprehension TOEFL',
         startTime:       DateTime.now().toIso8601String(),
         plannedDuration: 30,

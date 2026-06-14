@@ -84,7 +84,7 @@ class HomeProvider extends ChangeNotifier {
 
   List<BlockModel> _generateDummyHistory(DateTime now) {
     final blocks = <BlockModel>[];
-    int id = 1;
+    int _idCounter = 1; 
 
     // Generate 30 hari ke belakang
     for (int daysAgo = 29; daysAgo >= 0; daysAgo--) {
@@ -112,14 +112,14 @@ class HomeProvider extends ChangeNotifier {
           else { status = AppConstants.statusPending; actual = null; }
         } else {
           // Semakin lama makin bervariasi
-          final roll = (id + daysAgo) % 10;
+          final roll = (_idCounter + daysAgo) % 10;
           if (roll < 6) { status = AppConstants.statusDone; actual = planned - (roll * 3); }
           else if (roll < 8) { status = AppConstants.statusMissed; actual = null; }
           else { status = AppConstants.statusDone; actual = planned; }
         }
 
         blocks.add(BlockModel(
-          id: id++,
+          id: '${_idCounter++}',
           subject: subject,
           sessionName: _sessionName(subject),
           startTime: DateTime(date.year, date.month, date.day, hour, 0).toIso8601String(),
@@ -151,7 +151,7 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteBlock(int id) async {
+  Future<void> deleteBlock(String id) async {
     _allBlocks.removeWhere((b) => b.id == id);
     notifyListeners();
   }
