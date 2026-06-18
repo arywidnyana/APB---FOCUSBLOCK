@@ -1,5 +1,6 @@
+// FILE: lib/data/models/block_model.dart
 class BlockModel {
-  final String? id;  // ← harus String, bukan int?
+  final String? id;
   final String  subject;
   final String  sessionName;
   final String  startTime;
@@ -22,15 +23,15 @@ class BlockModel {
   });
 
   factory BlockModel.fromMap(Map<String, dynamic> map) => BlockModel(
-    id:              map['id']              as String?,
-    subject:         map['subject']         as String,
-    sessionName:     map['session_name']    as String,
-    startTime:       map['start_time']      as String,
+    id:              map['id'] as String?,
+    subject:         map['subject']          as String,
+    sessionName:     map['session_name']     as String,
+    startTime:       map['start_time']       as String,
     plannedDuration: map['planned_duration'] as int,
-    actualDuration:  map['actual_duration'] as int?,
-    status:          map['status']          as String? ?? 'pending',
-    date:            map['date']            as String,
-    createdAt:       map['created_at']      as String? ?? '',
+    actualDuration:  map['actual_duration']  as int?,
+    status:          map['status']           as String? ?? 'pending',
+    date:            map['date']             as String,
+    createdAt:       map['created_at']       as String? ?? '',
   );
 
   Map<String, dynamic> toMap() => {
@@ -45,15 +46,9 @@ class BlockModel {
   };
 
   BlockModel copyWith({
-    String? id,
-    String? subject,
-    String? sessionName,
-    String? startTime,
-    int?    plannedDuration,
-    int?    actualDuration,
-    String? status,
-    String? date,
-    String? createdAt,
+    String? id, String? subject, String? sessionName, String? startTime,
+    int? plannedDuration, int? actualDuration, String? status,
+    String? date, String? createdAt,
   }) => BlockModel(
     id:              id              ?? this.id,
     subject:         subject         ?? this.subject,

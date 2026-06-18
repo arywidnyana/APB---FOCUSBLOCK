@@ -1,9 +1,4 @@
-// =============================================================
 // FILE: lib/core/theme/app_theme.dart
-// TANGGUNG JAWAB: Membuat ThemeData Flutter dari design system.
-//   Dipasang di MaterialApp di app.dart.
-// =============================================================
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
@@ -16,23 +11,19 @@ class AppTheme {
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.navy,
     colorScheme: const ColorScheme.dark(
-      primary:    AppColors.teal,
-      secondary:  AppColors.amber,
-      error:      AppColors.coral,
-      surface:    AppColors.surface,
-      onPrimary:  AppColors.navy,
-      onSurface:  AppColors.textPrimary,
+      primary: AppColors.teal,
+      secondary: AppColors.amber,
+      error: AppColors.coral,
+      surface: AppColors.surface,
+      onPrimary: AppColors.navy,
+      onSurface: AppColors.textPrimary,
     ),
     textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
       displayLarge:  GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-      displayMedium: GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
       headlineLarge: GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-      headlineMedium:GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
       titleLarge:    GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
-      titleMedium:   GoogleFonts.poppins(color: AppColors.textPrimary, fontWeight: FontWeight.w500),
       bodyLarge:     GoogleFonts.inter(color: AppColors.textPrimary),
       bodyMedium:    GoogleFonts.inter(color: AppColors.textSecondary),
-      labelSmall:    GoogleFonts.inter(color: AppColors.textTertiary),
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.surface,
@@ -70,6 +61,10 @@ class AppTheme {
         borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: AppColors.teal, width: 1.5),
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: AppColors.coral, width: 1.2),
+      ),
       labelStyle: const TextStyle(color: AppColors.textSecondary),
       hintStyle: const TextStyle(color: AppColors.textTertiary),
     ),
@@ -78,6 +73,8 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.teal,
         foregroundColor: AppColors.navy,
+        disabledBackgroundColor: AppColors.surface3,
+        disabledForegroundColor: AppColors.textTertiary,
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 14),

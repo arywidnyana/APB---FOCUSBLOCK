@@ -1,9 +1,4 @@
-// =============================================================
 // FILE: lib/app/main_shell.dart
-// TANGGUNG JAWAB: Shell utama dengan Navigation Bar 5 tab —
-//   Home, Teman, Notifikasi, Laporan, Settings.
-// =============================================================
-
 import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
 import '../features/home/presentation/home_screen.dart';
@@ -20,14 +15,10 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
-  final int _unreadNotif = 3;
+  final int _unreadNotif = 0;
 
   final List<Widget> _screens = const [
-    HomeScreen(),
-    FriendsScreen(),
-    NotifScreen(),
-    ReportScreen(),
-    SettingsScreen(),
+    HomeScreen(), FriendsScreen(), NotifScreen(), ReportScreen(), SettingsScreen(),
   ];
 
   @override
@@ -45,32 +36,21 @@ class _MainShellState extends State<MainShell> {
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           indicatorColor: AppColors.tealDim,
           destinations: [
-            const NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home, color: AppColors.teal),
-              label: 'Home'),
-            const NavigationDestination(
-              icon: Icon(Icons.people_outline),
-              selectedIcon: Icon(Icons.people, color: AppColors.teal),
-              label: 'Teman'),
+            const NavigationDestination(icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home, color: AppColors.teal), label: 'Home'),
+            const NavigationDestination(icon: Icon(Icons.people_outline),
+              selectedIcon: Icon(Icons.people, color: AppColors.teal), label: 'Teman'),
             NavigationDestination(
-              icon: Badge(
-                label: Text('$_unreadNotif'),
-                backgroundColor: AppColors.coral,
-                child: const Icon(Icons.notifications_outlined)),
-              selectedIcon: Badge(
-                label: Text('$_unreadNotif'),
-                backgroundColor: AppColors.coral,
-                child: const Icon(Icons.notifications, color: AppColors.teal)),
+              icon: _unreadNotif > 0
+                  ? Badge(label: Text('$_unreadNotif'), backgroundColor: AppColors.coral,
+                      child: const Icon(Icons.notifications_outlined))
+                  : const Icon(Icons.notifications_outlined),
+              selectedIcon: const Icon(Icons.notifications, color: AppColors.teal),
               label: 'Notifikasi'),
-            const NavigationDestination(
-              icon: Icon(Icons.bar_chart_outlined),
-              selectedIcon: Icon(Icons.bar_chart, color: AppColors.teal),
-              label: 'Laporan'),
-            const NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings, color: AppColors.teal),
-              label: 'Settings'),
+            const NavigationDestination(icon: Icon(Icons.bar_chart_outlined),
+              selectedIcon: Icon(Icons.bar_chart, color: AppColors.teal), label: 'Laporan'),
+            const NavigationDestination(icon: Icon(Icons.settings_outlined),
+              selectedIcon: Icon(Icons.settings, color: AppColors.teal), label: 'Settings'),
           ],
         ),
       ),

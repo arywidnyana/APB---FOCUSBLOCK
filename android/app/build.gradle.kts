@@ -13,6 +13,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -25,11 +26,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-
-        // FIX: Menggunakan sintaks Kotlin Script (.kts) yang valid
-        ndk {
-            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a"))
-        }
     }
 
     buildTypes {
@@ -37,9 +33,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-} // FIX: Penutup blok android berada di sini
+}
 
-// FIX: Blok flutter harus berdiri sendiri di luar blok android
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+}
+
 flutter {
     source = "../.."
 }

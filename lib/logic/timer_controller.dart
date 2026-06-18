@@ -1,9 +1,4 @@
-// =============================================================
 // FILE: lib/logic/timer_controller.dart
-// TANGGUNG JAWAB: Semua logika siklus Pomodoro.
-//   Dipanggil oleh TimerProvider. Tidak tahu UI sama sekali.
-// =============================================================
-
 import 'dart:async';
 import '../core/constants/app_constants.dart';
 
@@ -12,30 +7,24 @@ enum TimerPhase { focus, shortBreak, longBreak }
 class TimerState {
   final TimerPhase phase;
   final int remainingSeconds;
-  final int sessionCount;   // sesi fokus yang sudah selesai
+  final int sessionCount;
   final bool isRunning;
   final bool isPaused;
 
   const TimerState({
-    required this.phase,
-    required this.remainingSeconds,
-    required this.sessionCount,
-    required this.isRunning,
-    required this.isPaused,
+    required this.phase, required this.remainingSeconds,
+    required this.sessionCount, required this.isRunning, required this.isPaused,
   });
 
   TimerState copyWith({
-    TimerPhase? phase,
-    int?        remainingSeconds,
-    int?        sessionCount,
-    bool?       isRunning,
-    bool?       isPaused,
+    TimerPhase? phase, int? remainingSeconds, int? sessionCount,
+    bool? isRunning, bool? isPaused,
   }) => TimerState(
-    phase:            phase            ?? this.phase,
+    phase: phase ?? this.phase,
     remainingSeconds: remainingSeconds ?? this.remainingSeconds,
-    sessionCount:     sessionCount     ?? this.sessionCount,
-    isRunning:        isRunning        ?? this.isRunning,
-    isPaused:         isPaused         ?? this.isPaused,
+    sessionCount: sessionCount ?? this.sessionCount,
+    isRunning: isRunning ?? this.isRunning,
+    isPaused: isPaused ?? this.isPaused,
   );
 
   double get progress {
@@ -51,34 +40,30 @@ class TimerState {
 
   String get phaseLabel {
     switch (phase) {
-      case TimerPhase.focus:      return 'Sesi Fokus';
+      case TimerPhase.focus: return 'Sesi Fokus';
       case TimerPhase.shortBreak: return 'Istirahat Pendek';
-      case TimerPhase.longBreak:  return 'Istirahat Panjang';
+      case TimerPhase.longBreak: return 'Istirahat Panjang';
     }
   }
 }
 
 int _totalSecondsForPhase(TimerPhase phase) {
   switch (phase) {
-    case TimerPhase.focus:      return AppConstants.defaultFocusDuration * 60;
+    case TimerPhase.focus: return AppConstants.defaultFocusDuration * 60;
     case TimerPhase.shortBreak: return AppConstants.defaultShortBreak * 60;
-    case TimerPhase.longBreak:  return AppConstants.defaultLongBreak * 60;
+    case TimerPhase.longBreak: return AppConstants.defaultLongBreak * 60;
   }
 }
 
 class TimerController {
-  Timer?     _timer;
+  Timer? _timer;
   TimerState _state = TimerState(
-    phase:            TimerPhase.focus,
+    phase: TimerPhase.focus,
     remainingSeconds: AppConstants.defaultFocusDuration * 60,
-    sessionCount:     0,
-    isRunning:        false,
-    isPaused:         false,
+    sessionCount: 0, isRunning: false, isPaused: false,
   );
 
   TimerState get state => _state;
-
-  /// Callback dipanggil setiap detik & saat fase selesai
   void Function(TimerState)? onTick;
   void Function(TimerPhase completedPhase)? onPhaseComplete;
 
@@ -95,17 +80,9 @@ class TimerController {
     onTick?.call(_state);
   }
 
-  void resume() {
-    if (!_state.isPaused) return;
-    start();
-  }
+  void resume() { if (_state.isPaused) start(); }
+  void skip() { _timer?.cancel(); _advancePhase(); }
 
-  void skip() {
-    _timer?.cancel();
-    _advancePhase();
-  }
-
-  /// Tandai sesi selesai manual (tombol "Selesai" ditekan)
   void complete() {
     _timer?.cancel();
     onPhaseComplete?.call(_state.phase);
@@ -115,18 +92,14 @@ class TimerController {
   void reset() {
     _timer?.cancel();
     _state = TimerState(
-      phase:            TimerPhase.focus,
+      phase: TimerPhase.focus,
       remainingSeconds: AppConstants.defaultFocusDuration * 60,
-      sessionCount:     0,
-      isRunning:        false,
-      isPaused:         false,
+      sessionCount: 0, isRunning: false, isPaused: false,
     );
     onTick?.call(_state);
   }
 
-  void dispose() {
-    _timer?.cancel();
-  }
+  void dispose() => _timer?.cancel();
 
   void _tick(Timer t) {
     if (_state.remainingSeconds <= 1) {
@@ -142,23 +115,17 @@ class TimerController {
   void _advancePhase() {
     int newCount = _state.sessionCount;
     TimerPhase nextPhase;
-
     if (_state.phase == TimerPhase.focus) {
       newCount++;
-      // Setelah 4 sesi fokus → long break
       nextPhase = (newCount % AppConstants.sessionsBeforeLongBreak == 0)
-          ? TimerPhase.longBreak
-          : TimerPhase.shortBreak;
+          ? TimerPhase.longBreak : TimerPhase.shortBreak;
     } else {
       nextPhase = TimerPhase.focus;
     }
-
     _state = TimerState(
-      phase:            nextPhase,
+      phase: nextPhase,
       remainingSeconds: _totalSecondsForPhase(nextPhase),
-      sessionCount:     newCount,
-      isRunning:        false,
-      isPaused:         false,
+      sessionCount: newCount, isRunning: false, isPaused: false,
     );
     onTick?.call(_state);
   }

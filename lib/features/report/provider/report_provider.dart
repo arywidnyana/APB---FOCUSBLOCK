@@ -1,23 +1,19 @@
-// =============================================================
 // FILE: lib/features/report/provider/report_provider.dart
-// VERSI: DUMMY DATA — untuk testing frontend tanpa database
-// =============================================================
-
 import 'package:flutter/foundation.dart';
 import '../../../data/models/block_model.dart';
-import '../../../data/models/daily_summary_model.dart';
-import '../../../core/constants/app_constants.dart';
+import '../../../logic/report_generator.dart';
 
 class ReportProvider extends ChangeNotifier {
+  final ReportGenerator _gen = ReportGenerator.instance;
   DailySummaryModel? _dailySummary;
-  List<BlockModel>   _missedBlocks   = [];
-  Map<String, int>   _subjectMinutes = {};
-  bool               _loading        = false;
+  List<BlockModel> _missedBlocks = [];
+  Map<String, int> _subjectMinutes = {};
+  bool _loading = false;
 
-  DailySummaryModel? get dailySummary   => _dailySummary;
-  List<BlockModel>   get missedBlocks   => _missedBlocks;
-  Map<String, int>   get subjectMinutes => _subjectMinutes;
-  bool               get loading        => _loading;
+  DailySummaryModel? get dailySummary => _dailySummary;
+  List<BlockModel> get missedBlocks => _missedBlocks;
+  Map<String, int> get subjectMinutes => _subjectMinutes;
+  bool get loading => _loading;
 
   String get todayDate {
     final n = DateTime.now();
@@ -27,41 +23,18 @@ class ReportProvider extends ChangeNotifier {
   Future<void> loadReport() async {
     _loading = true;
     notifyListeners();
-
-    await Future.delayed(const Duration(milliseconds: 400));
-
-    // ── DUMMY DATA ──────────────────────────────────────────
-    _dailySummary = DailySummaryModel(
-      date:               todayDate,
-      totalPlanned:       7,
-      totalDone:          5,
-      totalMissed:        1,
-      consistencyScore:   72.0,
-      totalActualMinutes: 225,
-    );
-
-    _missedBlocks = [
-      BlockModel(
-        id: '3', subject: 'Bahasa Inggris',
-        sessionName:     'Reading comprehension TOEFL',
-        startTime:       DateTime.now().toIso8601String(),
-        plannedDuration: 30,
-        status:          AppConstants.statusMissed,
-        date:            todayDate,
-        createdAt:       todayDate,
-      ),
-    ];
-
-    _subjectMinutes = {
-      'Pemrograman Mobile': 306,
-      'Kalkulus':           252,
-      'Struktur Data':      180,
-      'Basis Data':         126,
-      'Bahasa Inggris':     72,
-    };
-    // ────────────────────────────────────────────────────────
-
-    _loading = false;
-    notifyListeners();
+    try {
+      final now = DateTime.now();
+      final weekStart = now.subtract(Duration(days: now.weekday - 1));
+      final startDate = '${weekStart.year}-${weekStart.month.toString().padLeft(2,'0')}-${weekStart.day.toString().padLeft(2,'0')}';
+      _dailySummary = await _gen.generateDailySummary(todayDate);
+      _missedBlocks = await _gen.getMissedBlocks(todayDate);
+      _subjectMinutes = await _gen.getSubjectBreakdown(startDate, todayDate);
+    } catch (e) {
+      debugPrint('ReportProvider error: $e');
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
   }
 }
